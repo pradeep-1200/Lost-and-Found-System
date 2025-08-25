@@ -18,13 +18,14 @@ This is **Phase-I** of the project and demonstrates **basic OOP concepts** in Ja
 1. Clone or download this repository.  
 2. Open terminal in the project folder.  
 3. Compile the code:
-   ```bash
+   ```
    javac *.java
 
 ---
 
 ## Run the program:
-java Main
+ ```
+   java Main
 
 ---
 
