@@ -24,9 +24,9 @@ This is **Phase-I** of the project and demonstrates **basic OOP concepts** in Ja
 ---
 
 ## Run the program:
- ```
+   ```
    java Main
-
+```
 ---
 
 ## Future Plans
