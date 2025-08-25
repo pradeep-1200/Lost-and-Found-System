@@ -18,23 +18,22 @@ This is **Phase-I** of the project and demonstrates **basic OOP concepts** in Ja
 1. Clone or download this repository.  
 2. Open terminal in the project folder.  
 3. Compile the code:
-   ```
+   ```bash
    javac *.java
-
----
-
-## Run the program:
    ```
+4. Run the program:
+   ```bash
    java Main
-```
+   ```
+
 ---
 
 ## Future Plans
-1.Add database integration
-2.Use threads for automatic match suggestions
-3.Build a JavaFX GUI for better user experience
+- Add database integration  
+- Use threads for automatic match suggestions  
+- Build a JavaFX GUI for better user experience  
 
 ---
 
 ## Author
-Kalis
+**Kalis**
