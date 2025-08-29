@@ -69,6 +69,7 @@ public class LostFoundManager {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void loadData() {
         try {
             File file = new File(FILE_NAME);
