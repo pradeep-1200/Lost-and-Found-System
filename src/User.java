@@ -2,19 +2,31 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
+    private int id;
     private String name;
-    private String contact;
+    private String email;
+    private String phone;
 
-    public User(String name, String contact) {
+    public User(String name, String email, String phone) {
         this.name = name;
-        this.contact = contact;
+        this.email = email;
+        this.phone = phone;
+    }
+    
+    public User(int id, String name, String email, String phone) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
     }
 
+    public int getId() { return id; }
     public String getName() { return name; }
-    public String getContact() { return contact; }
+    public String getEmail() { return email; }
+    public String getPhone() { return phone; }
 
     @Override
     public String toString() {
-        return name + " (" + contact + ")";
+        return name + " (" + email + ")";
     }
 }

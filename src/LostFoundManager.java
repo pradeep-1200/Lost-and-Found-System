@@ -1,88 +1,67 @@
-import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class LostFoundManager {
-    private static final String FILE_NAME =
-            System.getProperty("user.dir") + File.separator + "data" + File.separator + "lost_found_data.ser";
-
-    private List<Item> items;
-    private int idCounter;
+    private DatabaseManager dbManager;
+    private User currentUser;
 
     public LostFoundManager() {
-        this.items = new ArrayList<>();
-        this.idCounter = 1;
-        loadData();
+        this.dbManager = new DatabaseManager();
+    }
+    
+    public User getCurrentUser() {
+        return currentUser;
+    }
+    
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+    }
+    
+    public int registerUser(String name, String email, String phone, String password) {
+        return dbManager.registerUser(name, email, phone, password);
+    }
+    
+    public boolean login(String email, String password) {
+        User user = dbManager.loginUser(email, password);
+        if (user != null) {
+            this.currentUser = user;
+            return true;
+        }
+        return false;
+    }
+    
+    public void logout() {
+        this.currentUser = null;
     }
 
-    public void addItem(Item item) {
-        items.add(item);
-        saveData();
+    public int addItem(Item item) {
+        int itemId = dbManager.addItem(item);
+        if (itemId > 0) {
+            // Find potential matches
+            List<Item> matches = dbManager.findPotentialMatches(item);
+            if (!matches.isEmpty()) {
+                System.out.println("\n*** POTENTIAL MATCHES FOUND ***");
+                for (Item match : matches) {
+                    System.out.println(match);
+                }
+                System.out.println("Contact the owners if any item matches!");
+            }
+        }
+        return itemId;
     }
 
     public List<Item> getAllItems() {
-        return items;
+        return dbManager.getAllItems();
     }
 
-    public List<Item> searchByName(String name) {
-        List<Item> results = new ArrayList<>();
-        for (Item item : items) {
-            if (item.getName().equalsIgnoreCase(name)) {
-                results.add(item);
-            }
-        }
-        return results;
+    public List<Item> searchItems(String keyword, String category, String type) {
+        return dbManager.searchItems(keyword, category, type);
     }
 
-    public Optional<Item> getItemById(int id) {
-        return items.stream().filter(i -> i.getId() == id).findFirst();
+    public boolean markItemAsReturned(int id) {
+        return dbManager.markItemAsReturned(id);
     }
-
-    public void markItemAsReturned(int id) {
-        Optional<Item> itemOpt = getItemById(id);
-        if (itemOpt.isPresent()) {
-            itemOpt.get().markAsReturned();
-            saveData();
-            System.out.println("Item marked as returned.");
-        } else {
-            System.out.println("Item not found.");
-        }
-    }
-
-    public int generateId() {
-        return idCounter++;
-    }
-
-    private void saveData() {
-        try {
-            File folder = new File(System.getProperty("user.dir") + File.separator + "data");
-            if (!folder.exists()) {
-                folder.mkdir();
-            }
-
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME));
-            oos.writeObject(items);
-            oos.close();
-        } catch (IOException e) {
-            System.out.println("Error saving data: " + e.getMessage());
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void loadData() {
-        try {
-            File file = new File(FILE_NAME);
-            if (file.exists()) {
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME));
-                items = (List<Item>) ois.readObject();
-                ois.close();
-                if (!items.isEmpty()) {
-                    idCounter = items.get(items.size() - 1).getId() + 1;
-                }
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error loading data: " + e.getMessage());
-        }
+    
+    public void close() {
+        dbManager.close();
     }
 }
